@@ -31,6 +31,12 @@ mkdir ./somewhere/problem-id
 
 ## Test
 
+### Test all cases
 ```zsh
 zsh ./tools/exec.sh ./somewhere/problem-id --lang=${lang}
+```
+
+### Debug single cases
+```zsh
+zsh ./tools/debug.sh ./somewhere/problem-id --lang=${lang} --case-id=${caseId}
 ```
