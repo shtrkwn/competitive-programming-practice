@@ -9,12 +9,12 @@ run_command=""
 for arg in "$@"; do
   case $arg in
   --lang=java)
-    javac "$CASE_PATH/Main.java" -d "$BIN_DIR"
+    javac "$CASE_PATH/java/src/Main.java" -d "$BIN_DIR"
     run_command="java -cp $BIN_DIR Main"
     shift
     ;;
   --lang=rust)
-    rustc "$CASE_PATH/main.rs" --out-dir "$BIN_DIR"
+    rustc "$CASE_PATH/rust/src/main.rs" --out-dir "$BIN_DIR"
     run_command="./$BIN_DIR/main"
     shift
     ;;
