@@ -1,3 +1,3 @@
 - [ ] [OJ](https://github.com/online-judge-tools/oj/)を使って問題の DL を自動化する
 - [ ] Rustのお作法に従ったディレクトリ構成にする（cargo newで生成されるディレクトリ）
-- [ ] testAll.shの作成（GitHub Actionsの勉強がてら）
+- [ ] testAll.shの作成（GitHub Actionsの勉強がてら。Bazelとかいれると面白いかも）

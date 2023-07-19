@@ -14,8 +14,8 @@ for arg in "$@"; do
     shift
     ;;
   --lang=rust)
-    rustc "$CASE_PATH/rust/src/main.rs" --out-dir "$BIN_DIR"
-    run_command="./$BIN_DIR/main"
+    cargo build --manifest-path $CASE_PATH/rust/Cargo.toml --release
+    run_command="$CASE_PATH/rust/target/release/rust"
     shift
     ;;
   *)
