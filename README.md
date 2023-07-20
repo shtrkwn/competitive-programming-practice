@@ -10,8 +10,17 @@
 
 ### 課題用ディレクトリの作成
 
-```
+#### 汎用
+
+```zsh
 mkdir ./somewhere/problem-id
+```
+
+#### Rust (Cargo)
+
+```zsh
+cargo new ./somewhere/problem-id/rust --vcs none
+# example: cargo new ./abc220/c/rust --vcs none
 ```
 
 ### テストデータの配置
