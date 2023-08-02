@@ -1,6 +1,33 @@
+use std::collections::VecDeque;
+
 use proconio::*;
 
+// 公式回答写経
 fn main() {
+  input! {
+    n:usize,
+    s: String
+  }
+
+  let s: Vec<char> = s.chars().collect();
+
+  let mut que: VecDeque<usize> = VecDeque::with_capacity(n);
+  que.push_back(n);
+
+  for i in (0..n).rev() {
+    if s[i] == 'L' {
+      que.push_back(i);
+    } else {
+      que.push_front(i);
+    }
+  }
+
+  let ans: String = que.into_iter().map(|u| format!("{} ", u)).collect();
+  println!("{}", ans.trim());
+}
+
+// 自分の回答
+fn main_mine() {
   input! {
     n:usize,
     s: String
