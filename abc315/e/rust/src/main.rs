@@ -1,83 +1,61 @@
+use petgraph::{
+  algo::{toposort, DfsSpace},
+  graph::{DiGraph, NodeIndex},
+  visit::Dfs,
+};
 use proconio::*;
+use std::collections::HashSet;
 
 fn main() {
   input! {
-    n:usize
+      n: usize,
   }
+  // initi graph
+  let mut g: DiGraph<(), ()> = DiGraph::new();
 
-  let mut graph: Vec<Vec<usize>> = Vec::new();
-  for _ in 0..n {
+  // add nodes to the graph
+  (0..n).into_iter().for_each(|_| {
+    g.add_node(());
+  });
+
+  // add edges to the graph
+  for start in 0..n {
     input! {
       c: usize,
-      p: [usize; c]
+      edges: [usize;c]
     }
-    graph.push(p.into_iter().map(|x| x - 1).collect());
+    for end in edges {
+      let start = NodeIndex::from(start as u32);
+      let end = NodeIndex::from(end as u32 - 1);
+      g.add_edge(start, end, ());
+    }
   }
 
-  match topological_sort(&graph, 0) {
-    Some(order) => {
-      for el in order.iter().rev() {
-        if el == &0 {
-          break;
-        }
-        print!("{} ", el + 1);
+  let mut space = DfsSpace::new(&g);
+  match toposort(&g, Some(&mut space)) {
+    Ok(result) => {
+      let reachable = reachable_nodes(&g, 0.into());
+      let order: Vec<usize> = result
+        .into_iter()
+        .filter(|i| reachable.contains(&i) && !i.eq(&NodeIndex::from(0 as u32)))
+        .map(|index| index.index() + 1)
+        .rev()
+        .collect();
+      for node in order {
+        print!("{} ", node);
       }
       println!();
     }
-    None => println!("The graph is not a DAG!"),
+    Err(_) => (),
   }
 }
-fn dfs(graph: &Vec<Vec<usize>>, start: usize, visited: &mut Vec<bool>) -> Vec<usize> {
-  let mut stack = vec![start];
-  let mut component = vec![];
 
-  while let Some(node) = stack.pop() {
-    if !visited[node] {
-      visited[node] = true;
-      component.push(node);
-      for &next in &graph[node] {
-        if !visited[next] {
-          stack.push(next);
-        }
-      }
-    }
+fn reachable_nodes(graph: &DiGraph<(), ()>, start: NodeIndex) -> HashSet<NodeIndex> {
+  let mut dfs = Dfs::new(graph, start);
+  let mut reachable = HashSet::new();
+
+  while let Some(node) = dfs.next(graph) {
+    reachable.insert(node);
   }
-
-  component
-}
-
-fn topological_sort(graph: &Vec<Vec<usize>>, start: usize) -> Option<Vec<usize>> {
-  let mut visited = vec![false; graph.len()];
-  let component = dfs(graph, start, &mut visited);
-
-  let mut indegree = vec![0; graph.len()];
-
-  for &node in &component {
-    for &next in &graph[node] {
-      indegree[next] += 1;
-    }
-  }
-
-  let mut queue: Vec<usize> = component
-    .clone()
-    .into_iter()
-    .filter(|&i| indegree[i] == 0)
-    .collect();
-  let mut sorted = Vec::new();
-
-  while let Some(node) = queue.pop() {
-    sorted.push(node);
-    for &next in &graph[node] {
-      indegree[next] -= 1;
-      if indegree[next] == 0 {
-        queue.push(next);
-      }
-    }
-  }
-
-  if sorted.len() == component.len() {
-    Some(sorted)
-  } else {
-    None
-  }
+  reachable
 }
